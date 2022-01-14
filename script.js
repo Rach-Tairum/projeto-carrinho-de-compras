@@ -20,8 +20,8 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
-  document.getElementsByClassName('items')[0].appendChild(section); 
+  
+  document.getElementsByClassName('items')[0].appendChild(section);
 
   return section;
 }
@@ -42,21 +42,16 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-async function produtos(produto) {
-  const objProdutos = await fetchProducts(produto);
+async function produtos() {
+  const objProdutos = await fetchProducts('computador');
 
-  const listaProdutos = objProdutos.results;
-  const obj = listaProdutos.reduce((acc, elemento) => {
+  objProdutos.forEach((elemento) => {
     const { id, title, thumbnail } = elemento;
-    const product = { id, name: title, image: thumbnail };
-    return { ...acc, product };
-  }, {});
-
-   console.log(obj);
+    const objFinal = { sku: id, name: title, image: thumbnail };
+    createProductItemElement(objFinal);
+  });
 }
-produtos('computador');
 
 window.onload = async () => { 
-  await produtos('computador');
-  createProductItemElement(await produtos('computador'));
+  await produtos();
 };
