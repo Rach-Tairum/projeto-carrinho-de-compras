@@ -38,6 +38,9 @@ function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+
+  document.getElementsByClassName('cart__items')[0].appendChild(li);
+
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
@@ -52,6 +55,14 @@ async function produtos() {
   });
 }
 
+async function produtoCarrinho() {
+  const obj = await fetchItem('MLB1341706310');
+  const { id: identifica, title, price } = obj;
+  const objEspecifico = { sku: identifica, name: title, salePrice: price };
+  createCartItemElement(objEspecifico);
+}
+
 window.onload = async () => { 
   await produtos();
+  await produtoCarrinho();
 };
