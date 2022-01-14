@@ -4,7 +4,8 @@ const fetchProducts = async (QUERY) => {
   try {
     const response = await fetch(urlPronto);
     const dadosDoProduto = await response.json();
-    return dadosDoProduto;
+    const listaProdutos = dadosDoProduto.results;
+    return listaProdutos;
   } catch (error) {
     return error;
   }
