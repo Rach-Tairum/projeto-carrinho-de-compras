@@ -31,9 +31,9 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  const lista = document.querySelectorAll('.cart__item');
+  const lista = document.querySelectorAll('.cart__items');
   lista.forEach((elemento) => {
-      elemento.parentElement.removeChild(event.target);
+      elemento.removeChild(event.target);
     });
 }
 
@@ -45,7 +45,6 @@ function createCartItemElement({ sku, name, salePrice }) {
   document.getElementsByClassName('cart__items')[0].appendChild(li);
 
   li.addEventListener('click', cartItemClickListener);
-  return li;
 }
 
 async function produtos() {
@@ -58,14 +57,26 @@ async function produtos() {
   });
 }
 
-async function produtoCarrinho() {
-  const obj = await fetchItem('MLB1341706310');
+async function produtoCarrinho(elemento) {
+  const obj = await fetchItem(elemento);
   const { id: identifica, title, price } = obj;
   const objEspecifico = { sku: identifica, name: title, salePrice: price };
   createCartItemElement(objEspecifico);
 }
 
+function createFunctionToButton() {
+  const button = document.querySelectorAll('.item__add');
+
+  button.forEach((botao, index) => {
+    botao.addEventListener('click', () => {
+      const itens = document.getElementsByClassName('item__sku')[index].innerText;
+      produtoCarrinho(itens); 
+    });
+  });
+}
+
 window.onload = async () => { 
   await produtos();
+  createFunctionToButton();
   await produtoCarrinho();
 };
