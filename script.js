@@ -75,8 +75,18 @@ function createFunctionToButton() {
   });
 }
 
+function emptyCart() {
+  const botao = document.querySelector('.empty-cart');
+  botao.addEventListener('click', () => {
+    const itensCarrinho = document.querySelector('.cart__items');
+    itensCarrinho.innerHTML = '';
+    console.log(itensCarrinho.childNodes);
+  });
+}
+
 window.onload = async () => { 
   await produtos();
   createFunctionToButton();
   await produtoCarrinho();
+  emptyCart();
 };
