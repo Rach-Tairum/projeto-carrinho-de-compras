@@ -80,9 +80,9 @@ function emptyCart() {
   botao.addEventListener('click', () => {
     const itensCarrinho = document.querySelector('.cart__items');
     itensCarrinho.innerHTML = '';
-    console.log(itensCarrinho.childNodes);
   });
 }
+emptyCart();
 
 window.onload = async () => { 
   await produtos();
