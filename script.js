@@ -30,9 +30,43 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+const div = document.querySelector('.total-price');
+
+function criaDivPreco() {
+  const precoAPagar = document.createElement('p');
+  precoAPagar.innerText = '0';
+  div.appendChild(precoAPagar);
+}
+
+function totalPrice() {
+  div.innerHTML = '';
+
+  let soma = 0;
+  const itensNoCarrinho = document.querySelectorAll('.cart__item');
+  itensNoCarrinho.forEach((element) => {
+    const texto = element.innerText;
+    const valor = texto.split('PRICE: $');
+    soma += Number(valor[1]); // Number está definindo que valor[1] é do tipo number para que então o calculo seja feito
+  });
+
+  const precoAPagar = document.createElement('p');
+  precoAPagar.innerText = `${soma}`;
+  div.appendChild(precoAPagar);
+
+  return soma;
+}
+
 function cartItemClickListener(event) {
   const lista = document.querySelectorAll('.cart__items');
   lista.forEach((elemento) => {
+      const texto = event.target.innerText;
+      const valor = texto.split('PRICE: $');
+      const valorNovo = totalPrice() - Number(valor[1]);
+      div.innerHTML = '';
+      const precoAPagar = document.createElement('p');
+      precoAPagar.innerText = `${valorNovo}`;
+      div.appendChild(precoAPagar);
+
       elemento.removeChild(event.target);
     });
 }
@@ -43,8 +77,11 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
 
   document.getElementsByClassName('cart__items')[0].appendChild(li);
+  totalPrice();
 
   li.addEventListener('click', cartItemClickListener);
+
+  return li;
 }
 
 async function produtos() {
@@ -80,6 +117,8 @@ function emptyCart() {
   botao.addEventListener('click', () => {
     const itensCarrinho = document.querySelector('.cart__items');
     itensCarrinho.innerHTML = '';
+    const item = document.querySelector('.total-price>p');
+    item.innerText = '0';
   });
 }
 emptyCart();
@@ -87,6 +126,6 @@ emptyCart();
 window.onload = async () => { 
   await produtos();
   createFunctionToButton();
-  await produtoCarrinho();
   emptyCart();
+  criaDivPreco();
 };
