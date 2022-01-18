@@ -67,11 +67,10 @@ function storageCart(objeto) {
 }
 
 function cartItemClickListener(event) {
-  const lista1 = document.getElementsByClassName('cart__items>li');
-  console.log(lista1);
+  const lista1 = document.querySelectorAll('.cart__items');
 
   lista1.forEach((elemento) => {
-      const texto = elemento.innerText;
+      const texto = event.target.innerText;
       const valor = texto.split('PRICE: $');
       const valorNovo = totalPrice() - Number(valor[1]);
       div.innerHTML = '';
