@@ -79,7 +79,7 @@ function totalPrice() {
   itensNoCarrinho.forEach((element) => {
     const texto = element.innerText;
     const valor = texto.split('PRICE: $');
-    soma += +valor[1]; // Number está definindo que valor[1] é do tipo number para que então o calculo seja feito
+    soma += Number(valor[1]); // Number está definindo que valor[1] é do tipo number para que então o calculo seja feito
   });
 
   const precoAPagar = document.createElement('p');
