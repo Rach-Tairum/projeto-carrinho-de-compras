@@ -1,3 +1,17 @@
+// Cria o carregando
+/* referências:
+ - https://desenvolvimentoparaweb.com/javascript/como-loading-de-javascript-funciona-domcontentloaded-e-onload/
+ - https://www.horadecodar.com.br/2020/11/03/mostrar-gif-enquanto-uma-pagina-carrega-com-javascript/
+*/
+  function carregar() {
+    const fadeContainer = document.querySelector('.loading');
+  
+  setTimeout(function () {
+    const body = document.querySelector('.body');
+    body.removeChild(fadeContainer);
+    }, 2000);
+}
+
 // Criação dos produtos na tela, com botões de adicionar ao carrinho, imagens e descrições.
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -29,7 +43,6 @@ function createProductItemElement({ sku, name, image }) {
 
 async function produtos() {
   const objProdutos = await fetchProducts('computador');
-
   objProdutos.forEach((elemento) => {
     const { id, title, thumbnail } = elemento;
     const objFinal = { sku: id, name: title, image: thumbnail };
@@ -165,7 +178,9 @@ function emptyCart() {
 emptyCart();
 
 // ------------------------------------------------------------------------------------------------
+
 window.onload = async () => { 
+  carregar();
   await produtos();
   createFunctionToButton();
   criaDivPreco();

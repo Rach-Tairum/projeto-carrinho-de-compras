@@ -5,6 +5,20 @@
   padding: 0;
 }
 
+#fade-container {
+  background: rgb(230, 240, 236);
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+}
+
+#carrega {
+  text-align: center;
+  padding-left: 250px;
+}
+
 body {
   background-color: rgb(246, 246, 246);
 }
