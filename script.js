@@ -51,10 +51,6 @@ async function produtos() {
 }
 // --------------------------------------------------------------------------------
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
 // Armazena os itens do Carrinho no Local Storage, está armazenando diretamente a lista
 let lista = [];
 
