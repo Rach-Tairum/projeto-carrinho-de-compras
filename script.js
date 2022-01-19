@@ -1,4 +1,4 @@
-// localStorage.clear();
+// Criação dos produtos na tela, com botões de adicionar ao carrinho, imagens e descrições.
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -27,10 +27,31 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
+async function produtos() {
+  const objProdutos = await fetchProducts('computador');
+
+  objProdutos.forEach((elemento) => {
+    const { id, title, thumbnail } = elemento;
+    const objFinal = { sku: id, name: title, image: thumbnail };
+    createProductItemElement(objFinal);
+  });
+}
+// --------------------------------------------------------------------------------
+
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// Armazena os itens do Carrinho no Local Storage, está armazenando diretamente a lista
+let lista = [];
+
+function storageCart(objeto) {
+  const item = JSON.stringify(objeto);
+  saveCartItems(item);
+}
+// --------------------------------------------------------------------------
+
+// Trabalha com o preço dos produtos para somar ou subtrair o preço total dos itens do carrinho.
 const listaCompras = document.querySelector('.cart__items');
 const div = document.querySelector('.total-price');
 
@@ -58,64 +79,57 @@ function totalPrice() {
   return soma;
 }
 
-const lista = [];
+// -------------------------------------------------------------------------------
 
-function storageCart(objeto) {
-  lista.push(objeto);
-  const item = JSON.stringify(lista);
-  saveCartItems(item);
-}
+// Evento que remove um item da lista e remove também do local Storage.
 
 function cartItemClickListener(event) {
   const lista1 = document.querySelectorAll('.cart__items');
 
   lista1.forEach((elemento) => {
+    // remove item da lista que vai pro local storage
       const texto = event.target.innerText;
       const valor = texto.split('PRICE: $');
-      const valorNovo = totalPrice() - Number(valor[1]);
-      div.innerHTML = '';
-      const precoAPagar = document.createElement('p');
-      precoAPagar.innerText = `${valorNovo}`;
-      div.appendChild(precoAPagar);
+      const titulo = texto.split('| NAME: ');
+      const titulo1 = titulo[1].split(' |');
+      const sku = titulo[0].split('SKU: ');
+      const skuOk = sku[1].split(' ');
+      const transformaTextoEmObj = { sku: skuOk[0], name: titulo1[0], salePrice: Number(valor[1]) };
+      const resultadoFilter = lista.filter((element) => element.sku !== transformaTextoEmObj.sku);
+      lista = resultadoFilter;
+      storageCart(lista);
+
+    // remove item
       elemento.removeChild(event.target);
     });
 }
+// ----------------------------------------------------------------------------------
 
-function createCartItemElement({ sku, name, salePrice }) {
+// Trabalha com o carrinho de compras em si:
+function createCartItemElement({ sku, name, salePrice }) { // Cria o elemento do carrinho e conforme vai adicinando os elementos faz a conta do preço total.
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
 
   document.getElementsByClassName('cart__items')[0].appendChild(li);
 
-  li.addEventListener('click', cartItemClickListener);
-  
   totalPrice();
-
-  // localStorage.setItem('chave', [{ sku, name, salePrice }])
+  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', totalPrice);
 
   return li;
 }
 
-async function produtos() {
-  const objProdutos = await fetchProducts('computador');
-
-  objProdutos.forEach((elemento) => {
-    const { id, title, thumbnail } = elemento;
-    const objFinal = { sku: id, name: title, image: thumbnail };
-    createProductItemElement(objFinal);
-  });
-}
-
-async function produtoCarrinho(elemento) {
+async function produtoCarrinho(elemento) { // Trás os elementos da API, transforma em objeto para criar a li e adiciona no local storage
   const obj = await fetchItem(elemento);
   const { id: identifica, title, price } = obj;
   const objEspecifico = { sku: identifica, name: title, salePrice: price };
   createCartItemElement(objEspecifico);
-  storageCart(objEspecifico);
+  lista.push(objEspecifico);
+  storageCart(lista);
 }
 
-function createFunctionToButton() {
+function createFunctionToButton() { // Cria evento que ao clicar em add ao carrinho
   const button = document.querySelectorAll('.item__add');
 
   button.forEach((botao, index) => {
@@ -126,6 +140,18 @@ function createFunctionToButton() {
   });
 }
 
+function getStorageCart() { // Trás os elementos de volta no local storage e coloca na lista para trabalhar com ele conforme as compras
+  if (localStorage.length > 0) {
+    const carrinho = JSON.parse(getSavedCartItems());
+    lista = carrinho;
+    carrinho.forEach((elemento) => {
+       createCartItemElement(elemento);
+    });
+  }
+}
+// -------------------------------------------------------------------------------------------
+
+// Cria função para o botão de esvaziar o carrinho.
 function emptyCart() {
   const botao = document.querySelector('.empty-cart');
   botao.addEventListener('click', () => {
@@ -133,19 +159,12 @@ function emptyCart() {
     const item = document.querySelector('.total-price>p');
     item.innerText = '0';
     localStorage.clear();
+    lista = [];
   });
 }
 emptyCart();
 
-function getStorageCart() {
-  if (localStorage.length > 0) {
-    const carrinho = JSON.parse(getSavedCartItems());
-    carrinho.forEach((elemento) => {
-       createCartItemElement(elemento);
-    });
-  }
-}
-
+// ------------------------------------------------------------------------------------------------
 window.onload = async () => { 
   await produtos();
   createFunctionToButton();
