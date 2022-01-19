@@ -116,10 +116,6 @@ body {
   box-sizing: border-box;
 }
 
-.item:hover {
-  width: 250px;
-}
-
 .item .item__sku {
   display: none;
 }
