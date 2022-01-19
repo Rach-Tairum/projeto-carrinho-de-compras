@@ -62,7 +62,6 @@ function storageCart(objeto) {
 
 // Trabalha com o preço dos produtos para somar ou subtrair o preço total dos itens do carrinho.
 const listaCompras = document.querySelector('.cart__items');
-const div = document.querySelector('.total-price');
 
 function criaDivPreco() {
   const precoAPagar = document.createElement('p');
@@ -71,6 +70,8 @@ function criaDivPreco() {
 }
 
 function totalPrice() {
+  const div = document.querySelector('.total-price');
+
   div.innerHTML = '';
 
   let soma = 0;
@@ -78,7 +79,7 @@ function totalPrice() {
   itensNoCarrinho.forEach((element) => {
     const texto = element.innerText;
     const valor = texto.split('PRICE: $');
-    soma += Number(valor[1]); // Number está definindo que valor[1] é do tipo number para que então o calculo seja feito
+    soma += +valor[1]; // Number está definindo que valor[1] é do tipo number para que então o calculo seja feito
   });
 
   const precoAPagar = document.createElement('p');
