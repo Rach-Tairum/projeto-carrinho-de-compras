@@ -1,4 +1,4 @@
-# Projeto de Carrinho de Compras!
+# Projeto de Carrinho de Compras! 🛒
 
 Bem vindo a sua nova loja de compras online! Nesse projeto, desenvolvi o principio de um e-commerce, utilizando a API do mercado livre. Nele é possivel adicionar e remover produtos do carrinho, ver o somatório da sua compra, excluir tudo do seu carrinho e ao recarregar a página, fica tudo salvo na seu carrinho! Além disso, esse projeto possui cobertura de testes!
 
@@ -21,3 +21,5 @@ Nesse projeto, fui capaz de:
 ---
 
 ## Projeto Pronto
+
+https://user-images.githubusercontent.com/93009735/164457217-79c998ad-1573-44f8-9a19-96887264c8ad.mp4
